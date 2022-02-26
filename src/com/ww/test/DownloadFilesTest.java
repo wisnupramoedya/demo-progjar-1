@@ -2,10 +2,6 @@ package com.ww.test;
 
 import com.ww.DownloadFiles;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class DownloadFilesTest {
     /**
@@ -25,17 +21,21 @@ public class DownloadFilesTest {
         };
         DownloadFiles.downloadFiles(links);
 
-        assert !isEmptyDir(dir) : "Downloads directory is empty.";
+        assert !isEmptyDir(dir) : "No file is downloaded.";
         System.out.println("Download files test success");
     }
 
     /**
      * Delete directory recursively
      *
-     * @param dir
+     * @param dir directory path that want to be deleted
      */
     private static void deleteDir(File dir) {
-        if (!dir.exists() || !dir.isDirectory()) return;
+        if (!dir.exists()) return;
+        if (!dir.isDirectory() && dir.isFile()) {
+            dir.delete();
+            return;
+        }
 
         File[] files = dir.listFiles();
         if (files != null) {
@@ -47,19 +47,23 @@ public class DownloadFilesTest {
     }
 
     /**
-     * Assert whether the given directory's path is empty or not.
+     * Assert whether the given directory's path has any file in it or not.
      *
      * @param dir  directory
      * @return bool
      */
     private static boolean isEmptyDir(File dir) {
-        if (dir.exists() && dir.isDirectory()) {
-            try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dir.toPath())) {
-                return !directoryStream.iterator().hasNext();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (!dir.exists()) return true;
+        if (!dir.isDirectory() && dir.isFile()) {
+            return false;
         }
-        return false;
+
+        File[] files = dir.listFiles();
+        if (files == null) return true;
+
+        for (final File file : files) {
+            if (!isEmptyDir(file)) return false;
+        }
+        return true;
     }
 }

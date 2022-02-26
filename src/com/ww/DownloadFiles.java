@@ -8,14 +8,23 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Map;
-import java.util.UUID;
 
 public class DownloadFiles {
+    /**
+     * Define downloadable content-type from HTTP response header.
+     */
+    private static String[] dowloadableExt = {
+            "image/*",
+            "model/*",
+            "audio/*",
+            "video/*",
+            "application/pdf",
+            "application/zip",
+    };
+
     /**
      * Download any files that can be downloaded from the given links.
      *
@@ -38,6 +47,7 @@ public class DownloadFiles {
             try {
                 URL url = new URL(link);
                 Map<String, String> metaData = getFilenameAndExtension(url);
+                if (metaData.isEmpty()) continue;
 
                 BufferedInputStream bis = new BufferedInputStream(url.openStream());
                 FileOutputStream fos = new FileOutputStream(
@@ -73,6 +83,8 @@ public class DownloadFiles {
             String contentType = conn.getContentType();
             String contentDisposition = conn.getHeaderField("Content-Disposition");
 
+            if (!isDownloadable(contentType)) return data;
+
             String filename = UUID.randomUUID().toString().substring(0, 6);
             String extension = '.' + contentType.substring(contentType.lastIndexOf("/") + 1);
 
@@ -89,5 +101,23 @@ public class DownloadFiles {
             Logger.getLogger(DownloadFiles.class.getName()).log(Level.SEVERE, null, e);
         }
         return data;
+    }
+
+    /**
+     * Determine whether the file content type in HTTP response header is downloadable or not.
+     *
+     * @param contentType HTTP response header value.
+     * @return boolean
+     */
+    private static boolean isDownloadable(String contentType) {
+        for (String ext: dowloadableExt) {
+            String[] parsedExt = ext.split("/");
+            String[] parsedCType = contentType.split("/");
+
+            if (Objects.equals(parsedExt[0], parsedCType[0])) {
+                return (Objects.equals(parsedExt[1], "*") || Objects.equals(parsedExt[1], parsedCType[1]));
+            }
+        }
+        return false;
     }
 }
