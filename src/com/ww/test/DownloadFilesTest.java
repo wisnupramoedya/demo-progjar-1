@@ -12,9 +12,8 @@ public class DownloadFilesTest {
      * Assert that download files feature works as intended.
      *
      * @param args default args
-     * @throws Exception thrown when any assertion fail
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         File dir = new File(".\\demo-progjar-1\\downloads");
         deleteDir(dir);
 
@@ -22,11 +21,11 @@ public class DownloadFilesTest {
             "https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg",
             "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
             "https://www.its.ac.id/informatika/wp-content/uploads/sites/44/2020/04/Appendix-5.6-BIP-Module-Handbook_en.pdf",
+            "https://0.gravatar.com/avatar/3fb72052b43cc3f1467beaae56ebfed7?s=96&d=mm&r=g",
         };
         DownloadFiles.downloadFiles(links);
-        if (assertEmptyDir(dir)) {
-            throw new Exception("Downloads directory is empty.");
-        }
+
+        assert !isEmptyDir(dir) : "Downloads directory is empty.";
         System.out.println("Download files test success");
     }
 
@@ -53,7 +52,7 @@ public class DownloadFilesTest {
      * @param dir  directory
      * @return bool
      */
-    private static boolean assertEmptyDir(File dir) {
+    private static boolean isEmptyDir(File dir) {
         if (dir.exists() && dir.isDirectory()) {
             try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dir.toPath())) {
                 return !directoryStream.iterator().hasNext();
