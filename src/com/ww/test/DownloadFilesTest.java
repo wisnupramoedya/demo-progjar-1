@@ -1,7 +1,12 @@
 package com.ww.test;
 
 import com.ww.DownloadFiles;
-import java.io.File;
+import com.ww.HttpResponseParser;
+
+import java.io.*;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Hashtable;
 
 public class DownloadFilesTest {
     /**
@@ -10,19 +15,26 @@ public class DownloadFilesTest {
      * @param args default args
      */
     public static void main(String[] args) {
-        File dir = new File(".\\demo-progjar-1\\downloads");
-        deleteDir(dir);
+        HttpResponseParser hrp = new HttpResponseParser("https://0.gravatar.com/avatar/3fb72052b43cc3f1467beaae56ebfed7?s=96&d=mm&r=g");
+        String requestLine = hrp.getRequestLine();
+        String requestBody = hrp.getRequestBody();
+        Hashtable<String, String> requestHeaders = hrp.getRequestHeaders();
 
-        String[] links = {
-            "https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg",
-            "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
-            "https://www.its.ac.id/informatika/wp-content/uploads/sites/44/2020/04/Appendix-5.6-BIP-Module-Handbook_en.pdf",
-            "https://0.gravatar.com/avatar/3fb72052b43cc3f1467beaae56ebfed7?s=96&d=mm&r=g",
-        };
-        DownloadFiles.downloadFiles(links);
+        return;
 
-        assert !isEmptyDir(dir) : "No file is downloaded.";
-        System.out.println("Download files test success");
+//        File dir = new File(".\\demo-progjar-1\\downloads");
+//        deleteDir(dir);
+//
+//        String[] links = {
+//            "https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg",
+//            "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
+//            "https://www.its.ac.id/informatika/wp-content/uploads/sites/44/2020/04/Appendix-5.6-BIP-Module-Handbook_en.pdf",
+//            "https://0.gravatar.com/avatar/3fb72052b43cc3f1467beaae56ebfed7?s=96&d=mm&r=g",
+//        };
+//        DownloadFiles.downloadFiles(links);
+//
+//        assert !isEmptyDir(dir) : "No file is downloaded.";
+//        System.out.println("Download files test success");
     }
 
     /**
