@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -45,22 +46,20 @@ public class DownloadFiles {
 
         for (String link : links) {
             try {
-                URL url = new URL(link);
-                Map<String, String> metaData = getFilenameAndExtension(url);
+                HttpResponseParser hrp = new HttpResponseParser(link);
+                Hashtable<String, String> metaData = getFilenameAndExtension(hrp.getRequestHeaders());
                 if (metaData.isEmpty()) continue;
 
-                BufferedInputStream bis = new BufferedInputStream(url.openStream());
                 FileOutputStream fos = new FileOutputStream(
                         String.format("%s\\%s%s", dirPath, metaData.get("filename"), metaData.get("extension"))
                 );
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
 
-                bos.write(bis.readAllBytes());
+                bos.write(hrp.getRequestBody().getBytes());
                 bos.flush();
 
                 bos.close();
                 fos.close();
-                bis.close();
 
             } catch (Exception e) {
                 Logger.getLogger(DownloadFiles.class.getName()).log(Level.SEVERE, null, e);
@@ -69,19 +68,18 @@ public class DownloadFiles {
         System.out.println("Download finished.");
     }
 
+
     /**
      * Get filename and extension of downloaded file.
      *
-     * @param url of downloaded file
+     * @param requestHeaders hashtable that contain all request headers
      * @return Map<String, String>
      */
-    private static Map<String, String> getFilenameAndExtension(URL url) {
-        Map<String, String> data = new HashMap<>();
+    private static Hashtable<String, String> getFilenameAndExtension(Hashtable<String, String> requestHeaders) {
+        Hashtable<String, String> data = new Hashtable<>();
         try {
-            URLConnection conn = url.openConnection();
-
-            String contentType = conn.getContentType();
-            String contentDisposition = conn.getHeaderField("Content-Disposition");
+            String contentType = requestHeaders.get("Content-Type");
+            String contentDisposition = requestHeaders.get("Content-Disposition");
 
             if (!isDownloadable(contentType)) return data;
 

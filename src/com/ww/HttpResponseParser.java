@@ -1,5 +1,6 @@
 package com.ww;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,7 +15,7 @@ public class HttpResponseParser {
     private StringBuffer requestBody;
 
     public HttpResponseParser(String url) {
-        requestHeaders = new Hashtable<String, String>();
+        requestHeaders = new Hashtable<>();
         requestBody = new StringBuffer();
         parseResponse(url);
     }
@@ -55,7 +56,7 @@ public class HttpResponseParser {
     }
 
     private Hashtable<String, String> getHostnameAndPath(String url) {
-        Hashtable<String, String> data = new Hashtable<String, String>();
+        Hashtable<String, String> data = new Hashtable<>();
 
         // Remove https:// or http:// from url
         int idx = url.indexOf("://");
@@ -95,7 +96,7 @@ public class HttpResponseParser {
     }
 
     private void appendRequestBody(String body) {
-        this.requestBody.append(body).append("\r\n");
+        this.requestBody.append(body).append("\n");
     }
 
     public String getRequestLine() {
