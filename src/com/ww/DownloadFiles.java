@@ -55,7 +55,7 @@ public class DownloadFiles {
                 );
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
 
-                bos.write(hrp.getRequestBody().getBytes());
+                bos.write(hrp.getRequestBody());
                 bos.flush();
 
                 bos.close();

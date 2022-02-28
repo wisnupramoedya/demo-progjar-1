@@ -15,13 +15,6 @@ public class DownloadFilesTest {
      * @param args default args
      */
     public static void main(String[] args) {
-//        HttpResponseParser hrp = new HttpResponseParser("https://0.gravatar.com/avatar/3fb72052b43cc3f1467beaae56ebfed7?s=96&d=mm&r=g");
-//        String requestLine = hrp.getRequestLine();
-//        String requestBody = hrp.getRequestBody();
-//        Hashtable<String, String> requestHeaders = hrp.getRequestHeaders();
-//
-//        return;
-
         File dir = new File(".\\demo-progjar-1\\downloads");
         deleteDir(dir);
 

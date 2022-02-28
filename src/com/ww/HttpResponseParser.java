@@ -1,9 +1,6 @@
 package com.ww;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -12,43 +9,43 @@ import java.util.logging.Logger;
 public class HttpResponseParser {
     private String requestLine;
     private Hashtable<String, String> requestHeaders;
-    private StringBuffer requestBody;
+    private byte[] requestBody;
 
     public HttpResponseParser(String url) {
         requestHeaders = new Hashtable<>();
-        requestBody = new StringBuffer();
         parseResponse(url);
     }
 
+    /**
+     * Parse response from the GET request to the given url.
+     *
+     * @param url for GET request
+     */
     public void parseResponse(String url) {
         Hashtable<String, String> metaData = getHostnameAndPath(url);
         try {
             Socket socket = new Socket(metaData.get("hostname"), 80);
-            InputStreamReader isr = new InputStreamReader(socket.getInputStream());
-            BufferedReader br = new BufferedReader(isr);
+            BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
+            DataInputStream dis = new DataInputStream(bis);
             BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
 
             bos.write(String.format("GET %s HTTP/1.1\r\n", metaData.get("path")).getBytes());
             bos.write(String.format("HOST: %s\r\n\r\n", metaData.get("hostname")).getBytes());
             bos.flush();
 
-            setRequestLine(br.readLine());
+            setRequestLine(dis.readLine());
 
-            String header = br.readLine();
+            String header = dis.readLine();
             while (header.length() > 0) {
                 appendRequestHeader(header);
-                header = br.readLine();
+                header = dis.readLine();
             }
 
-            String body = br.readLine();
-            while (body != null) {
-                appendRequestBody(body);
-                body = br.readLine();
-            }
+            setRequestBody(dis.readAllBytes());
 
             bos.close();
-            br.close();
-            isr.close();
+            dis.close();
+            bis.close();
             socket.close();
         } catch (Exception e) {
             Logger.getLogger(DownloadFiles.class.getName()).log(Level.SEVERE, null, e);
@@ -70,7 +67,7 @@ public class HttpResponseParser {
         if (idx != -1) {
             hostName = hostName.substring(0, idx);
         }
-        hostName = hostName.replaceFirst("www", "");
+        hostName = hostName.replaceFirst("www.", "");
 
         // Get path
         String path = url.substring(idx);
@@ -95,8 +92,8 @@ public class HttpResponseParser {
         this.requestHeaders.put(header.substring(0, idx), header.substring(idx + 2));
     }
 
-    private void appendRequestBody(String body) {
-        this.requestBody.append(body).append("\n");
+    private void setRequestBody(byte[] body) {
+        this.requestBody = body;
     }
 
     public String getRequestLine() {
@@ -107,7 +104,7 @@ public class HttpResponseParser {
         return this.requestHeaders;
     }
 
-    public String getRequestBody() {
-        return this.requestBody.toString();
+    public byte[] getRequestBody() {
+        return this.requestBody;
     }
 }
