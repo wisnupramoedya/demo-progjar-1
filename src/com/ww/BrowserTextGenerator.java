@@ -56,6 +56,24 @@ public class BrowserTextGenerator {
     }
 
     public static List<String> getAllLinks(String html) {
-        return null;
+        List<String> allLinks = new ArrayList<>();
+
+        String regexOfUrl = "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+        Pattern pattern = Pattern.compile(regexOfUrl, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(html);
+
+
+        while (matcher.find()) {
+            String link = html.substring(matcher.start(0), matcher.end(0));
+            allLinks.add(link);
+        }
+
+        System.out.println("List of all links: (" + allLinks.size() + " sizes)");
+        for (String link :
+                allLinks) {
+            System.out.println(link);
+        }
+
+        return allLinks;
     }
 }
