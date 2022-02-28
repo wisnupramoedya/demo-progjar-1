@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class BrowserTextGenerator {
     public static String openWeb() throws IOException, URISyntaxException {
-        System.out.printf("Enter the link:\n> ");
+        System.out.print("Enter the link:\n> ");
         Scanner scanner = new Scanner(System.in);
         String link = scanner.nextLine();
         URI uri = new URI(link);
@@ -38,10 +38,10 @@ public class BrowserTextGenerator {
         int bufferSize = 100;
         byte[] responseInBytes = new byte[bufferSize];
         int c = dataInputStream.read(responseInBytes);
-        String response = "";
+        StringBuilder response = new StringBuilder();
 
         while (c != -1) {
-            response += new String(responseInBytes);
+            response.append(new String(responseInBytes));
             responseInBytes = new byte[bufferSize];
             c = dataInputStream.read(responseInBytes);
         }
@@ -52,13 +52,13 @@ public class BrowserTextGenerator {
         dataInputStream.close();
         bufferedOutputStream.close();
         socket.close();
-        return response;
+        return response.toString();
     }
 
     public static List<String> getAllLinks(String html) {
         List<String> allLinks = new ArrayList<>();
 
-        String regexOfUrl = "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+        String regexOfUrl = "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?+-=\\\\.&]*)";
         Pattern pattern = Pattern.compile(regexOfUrl, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(html);
 
