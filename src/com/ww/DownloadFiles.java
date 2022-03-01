@@ -46,7 +46,7 @@ public class DownloadFiles {
 
         for (String link : links) {
             try {
-                HttpResponseParser hrp = new HttpResponseParser(link);
+                HttpResponseParser hrp = new HttpResponseParser(link, false);
                 Hashtable<String, String> metaData = getFilenameAndExtension(hrp.getRequestHeaders());
                 if (metaData.isEmpty()) continue;
 
