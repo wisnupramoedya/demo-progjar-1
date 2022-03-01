@@ -10,12 +10,10 @@ public class BrowserApp {
         try {
             String html = BrowserTextGenerator.openWeb();
             List<String> links = BrowserTextGenerator.getAllLinks(html);
+            DownloadFiles.downloadFiles(links.toArray(new String[0]));
         } catch (Exception e) {
             Logger.getLogger(BrowserApp.class.getName()).log(Level.SEVERE, null, e);
         }
-        String[] anchor_links;
-        String[] downloadable_links;
-        // class.static_method(downloadable_links);
 
     }
 }
