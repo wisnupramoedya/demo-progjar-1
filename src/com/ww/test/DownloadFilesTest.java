@@ -19,10 +19,9 @@ public class DownloadFilesTest {
         deleteDir(dir);
 
         String[] links = {
-//            "https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg",
-//            "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
-//            "https://www.its.ac.id/informatika/wp-content/uploads/sites/44/2020/04/Appendix-5.6-BIP-Module-Handbook_en.pdf",
-            "https://0.gravatar.com/avatar/3fb72052b43cc3f1467beaae56ebfed7?s=96&d=mm&r=g",
+            "https://bit.ly/3MgmxVu",
+            "http://www.cs.kent.edu/~svirdi/Ebook/wdp/ch01.pdf",
+            "http://www.philippine-embassy.org.sg/wp-content/uploads/274183812_317773887042213_5615031951159088216_n.jpg",
         };
         DownloadFiles.downloadFiles(links);
 
