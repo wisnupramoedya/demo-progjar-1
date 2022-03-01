@@ -22,7 +22,6 @@ public class DownloadFilesTest {
             "https://bit.ly/3MgmxVu",
             "http://www.cs.kent.edu/~svirdi/Ebook/wdp/ch01.pdf",
             "http://www.philippine-embassy.org.sg/wp-content/uploads/274183812_317773887042213_5615031951159088216_n.jpg",
-            "https://0.gravatar.com/avatar/3fb72052b43cc3f1467beaae56ebfed7?s=96&d=mm&r=g",
         };
         DownloadFiles.downloadFiles(links);
 
