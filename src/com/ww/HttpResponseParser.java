@@ -22,7 +22,7 @@ public class HttpResponseParser {
      *
      * @param url for GET request
      */
-    public void parseResponse(String url) {
+    private void parseResponse(String url) {
         Hashtable<String, String> metaData = getHostnameAndPath(url);
         try {
             Socket socket = new Socket(metaData.get("hostname"), 80);
