@@ -1,12 +1,7 @@
 package com.ww.test;
 
 import com.ww.DownloadFiles;
-import com.ww.HttpResponseParser;
-
 import java.io.*;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.Hashtable;
 
 public class DownloadFilesTest {
     /**
@@ -22,6 +17,7 @@ public class DownloadFilesTest {
             "https://bit.ly/3MgmxVu",
             "http://www.cs.kent.edu/~svirdi/Ebook/wdp/ch01.pdf",
             "http://www.philippine-embassy.org.sg/wp-content/uploads/274183812_317773887042213_5615031951159088216_n.jpg",
+            "http://intronetworks.cs.luc.edu/current2/ComputerNetworks.pdf",
         };
         DownloadFiles.downloadFiles(links);
 

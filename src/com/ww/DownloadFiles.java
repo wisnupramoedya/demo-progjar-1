@@ -1,11 +1,7 @@
 package com.ww;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -45,9 +41,12 @@ public class DownloadFiles {
         }
 
         for (String link : links) {
+            System.out.format("Fetching: %s ...\n", link);
             try {
                 HttpResponseParser hrp = new HttpResponseParser(link, false);
-                Hashtable<String, String> metaData = getFilenameAndExtension(hrp.getRequestHeaders());
+                if (hrp.getRequestHeaders().isEmpty()) continue;
+
+                Hashtable<String, String> metaData = getFilenameAndExtension(hrp);
                 if (metaData.isEmpty()) continue;
 
                 FileOutputStream fos = new FileOutputStream(
@@ -72,14 +71,14 @@ public class DownloadFiles {
     /**
      * Get filename and extension of downloaded file.
      *
-     * @param requestHeaders hashtable that contain all request headers
+     * @param hrp class that contain all HTTP responses and headers.
      * @return Map<String, String>
      */
-    private static Hashtable<String, String> getFilenameAndExtension(Hashtable<String, String> requestHeaders) {
+    private static Hashtable<String, String> getFilenameAndExtension(HttpResponseParser hrp) {
         Hashtable<String, String> data = new Hashtable<>();
         try {
-            String contentType = requestHeaders.get("Content-Type");
-            String contentDisposition = requestHeaders.get("Content-Disposition");
+            String contentType = hrp.getRequestHeaderObj("Content-Type");
+            String contentDisposition = hrp.getRequestHeaderObj("Content-Disposition", true);
 
             if (!isDownloadable(contentType)) return data;
 
@@ -107,7 +106,7 @@ public class DownloadFiles {
      * @param contentType HTTP response header value.
      * @return boolean
      */
-    private static boolean isDownloadable(String contentType) {
+    public static boolean isDownloadable(String contentType) {
         for (String ext: dowloadableExt) {
             String[] parsedExt = ext.split("/");
             String[] parsedCType = contentType.split("/");
