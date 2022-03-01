@@ -9,10 +9,11 @@ import java.util.logging.Logger;
 public class HttpResponseParser {
     private String requestLine;
     private Hashtable<String, String> requestHeaders;
-    private byte[] requestBody;
+    private ByteArrayOutputStream requestBody;
 
     public HttpResponseParser(String url) {
         requestHeaders = new Hashtable<>();
+        requestBody = new ByteArrayOutputStream();
         parseResponse(url);
     }
 
@@ -41,7 +42,16 @@ public class HttpResponseParser {
                 header = dis.readLine();
             }
 
-            setRequestBody(dis.readAllBytes());
+            int size = Integer.parseInt(this.requestHeaders.get("Content-Length")); // in byte
+            int currentSize = 0;
+            byte[] buffer = new byte[1024];
+
+            do {
+                int c = dis.read(buffer);
+                currentSize += c;
+                requestBody.writeBytes(buffer);
+                System.out.format("Download %s: %d | %d\n", url, currentSize, size);
+            } while (dis.available() > 0);
 
             bos.close();
             dis.close();
@@ -52,6 +62,12 @@ public class HttpResponseParser {
         }
     }
 
+    /**
+     * Parse hostname and path from url.
+     *
+     * @param url
+     * @return Hashtable<String, String>
+     */
     private Hashtable<String, String> getHostnameAndPath(String url) {
         Hashtable<String, String> data = new Hashtable<>();
 
@@ -92,10 +108,6 @@ public class HttpResponseParser {
         this.requestHeaders.put(header.substring(0, idx), header.substring(idx + 2));
     }
 
-    private void setRequestBody(byte[] body) {
-        this.requestBody = body;
-    }
-
     public String getRequestLine() {
         return this.requestLine;
     }
@@ -105,6 +117,6 @@ public class HttpResponseParser {
     }
 
     public byte[] getRequestBody() {
-        return this.requestBody;
+        return this.requestBody.toByteArray();
     }
 }
