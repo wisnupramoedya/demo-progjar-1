@@ -71,7 +71,6 @@ public class BrowserTextGenerator {
                 response.append(new String(responseInBytes));
             } while (c != -1);
 
-//            System.out.println(response);
             Scanner scanner = new Scanner(response.toString());
             int counter = 0;
             this.isBody = false;
@@ -97,6 +96,7 @@ public class BrowserTextGenerator {
                 }
                 else if (this.isBody) {
                     StringBuilder responseOfBody = new StringBuilder();
+                    responseOfBody.append(lineResponse);
                     while (scanner.hasNextLine()) {
                         responseOfBody.append(scanner.nextLine());
                     }
