@@ -79,7 +79,7 @@ public class BrowserTextGenerator {
             while (scanner.hasNextLine()) {
                 String lineResponse = scanner.nextLine();
 
-                if (!isBody) {
+                if (!this.isBody) {
                     if (counter == 0) {
                         String[] firstLine = lineResponse.split(" ", 3);
                         this.accessCode = Integer.parseInt(firstLine[1]);
@@ -88,20 +88,20 @@ public class BrowserTextGenerator {
                         System.out.println("Access: " + accessCode + " => " + (isError ? "Message Error: " : "Message: ") + messageCode);
                     }
                     else if (lineResponse.length() <= 0) {
-                        isBody = true;
+                        this.isBody = true;
                         continue;
                     }
                     else {
                         this.appendResponseHeader(lineResponse);
                     }
                 }
-                else if (isBody) {
+                else if (this.isBody) {
                     StringBuilder responseOfBody = new StringBuilder();
                     while (scanner.hasNextLine()) {
                         responseOfBody.append(scanner.nextLine());
                     }
                     responseBody = responseOfBody.toString();
-                    continue;
+                    break;
                 }
                 counter++;
             }
@@ -128,7 +128,7 @@ public class BrowserTextGenerator {
         dataInputStream.close();
         bufferedOutputStream.close();
         socket.close();
-        return responseBody.toString();
+        return responseBody;
     }
 
     private String encodedToken(String username, String password) {
