@@ -41,7 +41,7 @@ public class HttpResponseParser {
                 }
                 if (!requestHeaders.isEmpty() && requestHeaders.containsKey("Location")) {
                     url = requestHeaders.get("Location");
-                    System.out.println("Redirecting to " + url); // TODO:: Comment on prod
+                    System.out.println("Redirecting to " + url);
                 }
 
                 metaData = getMetaData(url);
@@ -107,7 +107,7 @@ public class HttpResponseParser {
 
             if ((accessCode / 100) == 4) {
                 String msg = "Content not found";
-                System.out.println(msg); // TODO:: Comment on prod
+                System.out.println(msg);
                 throw new Exception(msg);
             }
         } catch (Exception e) {
