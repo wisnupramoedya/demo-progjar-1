@@ -41,7 +41,7 @@ public class HttpResponseParser {
                 }
                 if (!requestHeaders.isEmpty() && requestHeaders.containsKey("Location")) {
                     url = requestHeaders.get("Location");
-                    System.out.println("Relocating to " + url); // TODO:: Comment on prod
+                    System.out.println("Redirecting to " + url); // TODO:: Comment on prod
                 }
 
                 metaData = getMetaData(url);

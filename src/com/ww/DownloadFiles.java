@@ -31,7 +31,7 @@ public class DownloadFiles {
         System.out.println("Download start.");
 
         String timestamp = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(new Date());
-        String dirPath =  String.format(".\\demo-progjar-1\\downloads\\%s", timestamp);
+        String dirPath =  String.format(".\\downloads\\%s", timestamp);
 
         try {
             Files.createDirectories(Paths.get(dirPath));
