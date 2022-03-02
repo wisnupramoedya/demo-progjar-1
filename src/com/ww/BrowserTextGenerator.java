@@ -68,7 +68,7 @@ public class BrowserTextGenerator {
             do {
                 responseInBytes = new byte[bufferSize];
                 c = dataInputStream.read(responseInBytes);
-                response.append(new String(responseInBytes));
+                response.append(new String(responseInBytes, "UTF-8"));
             } while (c != -1);
 
             Scanner scanner = new Scanner(response.toString());
@@ -81,7 +81,7 @@ public class BrowserTextGenerator {
                 if (!this.isBody) {
                     if (counter == 0) {
                         String[] firstLine = lineResponse.split(" ", 3);
-                        this.accessCode = Integer.parseInt(firstLine[1]);
+                        this.accessCode = Integer.parseInt(firstLine[1].substring(firstLine[1].length() - 3));
                         this.messageCode = firstLine[2];
                         boolean isError = accessCode > 300;
                         System.out.println("Access: " + accessCode + " => " + (isError ? "Message Error: " : "Message: ") + messageCode);
