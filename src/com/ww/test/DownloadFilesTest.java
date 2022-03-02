@@ -10,7 +10,7 @@ public class DownloadFilesTest {
      * @param args default args
      */
     public static void main(String[] args) {
-        File dir = new File(".\\demo-progjar-1\\downloads");
+        File dir = new File(".\\downloads");
         deleteDir(dir);
 
         String[] links = {
